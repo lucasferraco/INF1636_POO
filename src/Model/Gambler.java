@@ -51,9 +51,15 @@ public class Gambler {
 	}
 
 	public void addBet(int newBet) {
+		if (totalChips == 0)
+			newBet = 0;
+		else if (newBet > totalChips) 
+			newBet = newBet - totalChips;
+		
 		totalBet += newBet;
 		totalChips -= newBet;
 	}
+	
 	public int getChips() {
 		return totalChips;
 	}

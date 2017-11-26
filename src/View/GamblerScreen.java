@@ -139,10 +139,15 @@ public class GamblerScreen extends JFrame {
 			resultLabel.setForeground(Color.white);
 			resultLabel.setText("DRAW. You receive your bet back.");
 		}
-		else { // if (state == PlayerState.Surrendered)
+		else if (state == PlayerState.Surrendered) {
 			resultLabel.setForeground(Color.gray);
 			resultLabel.setText("SURRENDERED. Wait for the next round.");
 		}
+		else { // if (state == PlayerState.Broke)
+			resultLabel.setForeground(new Color(128, 44, 49));
+			resultLabel.setText("BROKE. Better luck next time!");
+		}
+		
 		panel.add(resultLabel);
 	}
 	

@@ -121,15 +121,21 @@ public class GamblerController {
 			gambler.addChips(gambler.getBet());
 		}
 		
+		if (gambler.getChips() == 0) {
+			gambler.setState(PlayerState.Broke);
+		}
+		
 		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
 		view.addResultLabel(gambler.getState());
 		view.disablePlayingButtons();
 	}
 
 	public void reset() {
-		gambler.reset();
-		
-		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
-		view.clear();
+		if (gambler.getState() != PlayerState.Broke) {
+			gambler.reset();
+			
+			view.updateChipsLabels(gambler.getBet(), gambler.getChips());
+			view.clear();			
+		}
 	}
 }

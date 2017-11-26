@@ -1,7 +1,7 @@
 package Model;
 
 public enum PlayerState {
-	Betting(2), Playing(3), Waiting(4), Surrendered(5),
+	Betting(2), Playing(3), Waiting(4), Surrendered(5), Broke(6),
 	Won(1), Lost(-1), Draw(0);
 	
 	public int stateValue;

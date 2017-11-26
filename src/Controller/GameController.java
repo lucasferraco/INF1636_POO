@@ -161,6 +161,14 @@ public final class GameController {
 		for(int i = 0; i < numberOfPlayers; i++)
 			gamblersControllers.get(i).reset();
 		
+		for(int i = 0; i < numberOfPlayers; i++) {
+			if (	gamblersControllers.get(i).getPlayerState() == PlayerState.Broke) {
+				gamblersControllers.remove(i);
+				numberOfPlayers--;
+				i--;
+			}			
+		}
+		
 		table.reset();
 		tableView.clear();
 
