@@ -12,16 +12,22 @@ public class Gambler {
 	private int points;
 	public ArrayList<Card> cards;
 	
-	private int[] chips;
 	private int totalBet;
-	private int avaiableMoney;
+	private int totalChips;
 
 	public Gambler(int id) {
-		cards = new ArrayList<Card>();
 		this.id = id;
-		state = PlayerState.Playing;
+		
+		state = PlayerState.Betting;
 		points = 0;
+		cards = new ArrayList<Card>();
+		
 		totalBet = 0;
+		totalChips = 1000;
+	}
+	
+	public PlayerState getState() {
+		return state;
 	}
 	
 	public void setState(PlayerState newState) {
@@ -30,10 +36,6 @@ public class Gambler {
 		if (newState == PlayerState.Playing) {
 			reset();
 		}
-	}
-	
-	public PlayerState getState() {
-		return state;
 	}
 	
 	public int getPoints() {
@@ -48,6 +50,23 @@ public class Gambler {
 		}
 	}
 	
+	public int getBet() {
+		return totalBet;
+	}
+
+	public void addBet(int newBet) {
+		totalBet += newBet;
+		totalChips -= newBet;
+	}
+
+	public int getChips() {
+		return totalChips;
+	}
+
+	public void addChips(int newChips) {
+		totalChips += newChips;
+	}
+
 	public void reset() {
 		cards.clear();
 		points = 0;

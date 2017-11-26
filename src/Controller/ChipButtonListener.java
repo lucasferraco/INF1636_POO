@@ -12,7 +12,10 @@ public class ChipButtonListener implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		System.out.println("button for " + chipValue + " chip value");
+		GameController gameManager = GameController.getInstance();
+		GamblerController currentGamblerManager = gameManager.gamblersControllers.get(gameManager.currentPlayer);
+		
+		currentGamblerManager.bet(chipValue);
 	}
 
 }

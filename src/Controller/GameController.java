@@ -13,8 +13,8 @@ public final class GameController {
 	private Table table;
 	
 	private int numberOfPlayers;
-	private ArrayList<GamblerController> gamblersControllers;
-	private int currentPlayer;
+	public ArrayList<GamblerController> gamblersControllers;
+	public int currentPlayer;
 	
 	// Sligleton Definition
 	private static final GameController theOnlyInstance = new GameController();
@@ -37,22 +37,15 @@ public final class GameController {
 		tableView = new TableScreen(screenSize.getWidth()/2, 200);
 		tableView.setVisible(true);
 		initializeDeck();
-		shuffleDeck();
 		
 		this.numberOfPlayers = numberOfPlayers;
 		currentPlayer = -1;
 		gamblersControllers = new ArrayList<GamblerController>();
 		
-		for(int i = 0; i < numberOfPlayers; i++) {
+		for(int i = 0; i < numberOfPlayers; i++) 
 			gamblersControllers.add(new GamblerController(i));
-			gamblersControllers.get(i).hit();
-		}
 		
-		for(int i = 0; i < numberOfPlayers; i++)
-			gamblersControllers.get(i).hit();
-		
-		tableView.drawUpsideDownCard();
-		getNewCard();
+		nextPlayerToBet();
 	}
 	
 	public void initializeDeck() {
@@ -61,11 +54,39 @@ public final class GameController {
 			deck.add(new Card(Suit.Diamonds, i+1));
 			deck.add(new Card(Suit.Hearts  , i+1));
 			deck.add(new Card(Suit.Spades  , i+1));
-		}		
+		}
+		
+		shuffleDeck();
 	}
 	
 	public void shuffleDeck() {
 		Collections.shuffle(deck);
+	}
+	
+	public void nextPlayerToBet() {
+		currentPlayer++;
+		
+		if (currentPlayer == numberOfPlayers) {
+			currentPlayer = 0;
+			endBets();
+		}
+		else {
+			gamblersControllers.get(currentPlayer).setBettingView();
+		}
+	}
+	
+	public void endBets() {
+		// Prepare playing scenario
+		for(int i = 0; i < numberOfPlayers; i++)
+			gamblersControllers.get(i).play();
+			
+		for(int i = 0; i < numberOfPlayers; i++) {
+			gamblersControllers.get(i).hit();
+			gamblersControllers.get(i).hit();
+		}
+		
+		tableView.drawUpsideDownCard();
+		getNewCard();
 	}
 	
 	private void getNewCard() {

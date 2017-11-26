@@ -17,19 +17,38 @@ import Model.PlayerState;
 
 public class GamblerScreen extends JFrame {	
 	public CardPanel panel;
+	
+	// Info labels
 	private JLabel pointsLabel = new JLabel("Points: 0");
+	private JLabel bettingLabel = new JLabel("Bet: 0");
+	private JLabel totalChipsLabel = new JLabel("Chips: 0");
 	private JLabel resultLabel = new JLabel();
+	
+	// Action Buttons
+	private JButton betButton = new JButton("bet");
 	private JButton hitButton = new JButton("hit");
 	private JButton standButton = new JButton("stand");
+	private JButton surrenderButton = new JButton("surrender");
 	
 	public GamblerScreen(String gamblerId, double posX, double posY, double width, double height) {
 		panel = new CardPanel();		
 		panel.setBackground(new Color(44, 128, 65));
-		panel.repaint();
+		
+		// Add actions buttons to panel
+		panel.add(betButton);
 		panel.add(hitButton);
 		panel.add(standButton);
+		panel.add(surrenderButton);
+		
+		// Add info labels to panel
 		panel.add(pointsLabel);
+		panel.add(bettingLabel);
+		panel.add(totalChipsLabel);
+		
+		disablePlayingButtons();
 		add(panel);
+		
+		panel.repaint();
 		
 		setSize((int) width,(int) height);
 		setLocation(new Point((int) posX,(int) posY));
@@ -37,8 +56,13 @@ public class GamblerScreen extends JFrame {
 		setTitle("Gambler " + gamblerId);
 	}
 	
-	public void updateLabel(int points) {
+	public void updatePointsLabel(int points) {
 		pointsLabel.setText("Points: " + String.valueOf(points));
+	}
+	
+	public void updateChipsLabels(int bet, int totalChips) {
+		bettingLabel.setText("Bet: " + String.valueOf(bet));
+		totalChipsLabel.setText("Chips: " + String.valueOf(totalChips));
 	}
 	
 	public void setListeners(GamblerController controller) {
@@ -56,14 +80,29 @@ public class GamblerScreen extends JFrame {
 				controller.stand();
 			}
 		});
+		
+		betButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {		
+				controller.endBetting();
+			}
+		});
 	}
 	
-	public void enableButtons() {
-		hitButton.setEnabled(true);;
+	public void enableBettingButtons() {
+		betButton.setEnabled(true);
+	}
+	
+	public void disableBettingButtons() {
+		betButton.setEnabled(false);
+	}
+	
+	public void enablePlayingButtons() {
+		hitButton.setEnabled(true);
 		standButton.setEnabled(true);
 	}
 	
-	public void disableButtons() {
+	public void disablePlayingButtons() {
 		hitButton.setEnabled(false);
 		standButton.setEnabled(false);
 	}
@@ -87,7 +126,7 @@ public class GamblerScreen extends JFrame {
 	
 	public void clear() {
 		panel.remove(resultLabel);
-		updateLabel(0);
+		updatePointsLabel(0);
 		panel.cardsImages.clear();
 		panel.repaint();		
 	}
