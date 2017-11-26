@@ -35,6 +35,7 @@ public final class GameController {
 		
 		table = new Table();
 		tableView = new TableScreen(screenSize.getWidth()/2, 200);
+		tableView.setListeners(this);
 		tableView.setVisible(true);
 		initializeDeck();
 		
@@ -89,6 +90,14 @@ public final class GameController {
 		getNewCard();
 	}
 	
+	public Card popCard() {	
+		if (deck.isEmpty()) {
+			return null;
+		}
+		
+		return deck.remove(0);
+	}
+	
 	private void getNewCard() {
 		Card tableCard = deck.remove(0);
 		
@@ -140,19 +149,22 @@ public final class GameController {
 						
 						PlayerState resultState = PlayerState.getStateWith(result);
 						gamblersControllers.get(i).setResult(resultState);
-						System.out.println("player " + (i+1) + " chips = " + gamblersControllers.get(i).getPlayerState());
 					}
-//					gamblersControllers.get(i).reset();
 				}
 			}
+			
+			tableView.showResetOption();
 		}
 	}
 	
-	public Card popCard() {	
-		if (deck.isEmpty()) {
-			return null;
-		}
+	public void reset() {
+		for(int i = 0; i < numberOfPlayers; i++)
+			gamblersControllers.get(i).reset();
 		
-		return deck.remove(0);
+		table.reset();
+		tableView.clear();
+
+		currentPlayer = -1;
+		nextPlayerToBet();
 	}
 }

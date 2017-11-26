@@ -147,8 +147,10 @@ public class GamblerScreen extends JFrame {
 	}
 	
 	public void clear() {
-		panel.remove(resultLabel);
 		updatePointsLabel(0);
+		disablePlayingButtons();
+		
+		panel.remove(resultLabel);
 		panel.cardsImages.clear();
 		panel.repaint();		
 	}

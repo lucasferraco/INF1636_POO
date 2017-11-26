@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import Controller.ChipButtonListener;
+import Controller.GamblerController;
+import Controller.GameController;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,19 +16,14 @@ import View.TableScreenPanel;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.URL;
 
 public class TableScreen extends JFrame {
 	public TableScreenPanel panel;
 	private JLabel pointsLabel = new JLabel("Points: 0");
-	
-	private JButton chip1Button;
-	private JButton chip5Button;
-	private JButton chip10Button;
-	private JButton chip20Button;
-	private JButton chip50Button;
-	private JButton chip100Button;
+	private JButton resetButton = new JButton("reset");
 	
 	public TableScreen(double posX, double posY) {
 		Image image = null;
@@ -49,18 +46,25 @@ public class TableScreen extends JFrame {
 		pointsLabel.setLocation((getWidth() - pointsLabel.getWidth())/2, (getHeight() - pointsLabel.getHeight())/2);
 		pointsLabel.setForeground(Color.white);
 		panel.add(pointsLabel);
-		
-		Color tableGreen = new Color(44, 128, 65);
-		
-		chip1Button = createChipButton(1);
-		chip5Button = createChipButton(5);
-		chip10Button = createChipButton(10);
-		chip20Button = createChipButton(20);
-		chip50Button = createChipButton(50);
-		chip100Button = createChipButton(100);
+				
+		createChipButton(1);
+		createChipButton(5);
+		createChipButton(10);
+		createChipButton(20);
+		createChipButton(50);
+		createChipButton(100);
 	}
 	
-	public JButton createChipButton(int value) {
+	public void setListeners(GameController controller) {
+		resetButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.reset();
+			}
+		});
+	}
+	
+	public void createChipButton(int value) {
 		Image image = null;
 		
 		try {
@@ -72,13 +76,16 @@ public class TableScreen extends JFrame {
 		
 		JButton btn = new JButton(new ImageIcon(image));
 		btn.addActionListener(new ChipButtonListener(value));
-		panel.add(btn);
-		
-		return btn;
+		panel.add(btn);		
 	}
 	
 	public void updateLabel(int points) {
 		pointsLabel.setText("Points: " + String.valueOf(points));
+	}
+	
+	public void showResetOption() {
+		panel.add(resetButton);
+		repaint();
 	}
 	
 	public void drawUpsideDownCard() {
@@ -88,5 +95,13 @@ public class TableScreen extends JFrame {
 	public void removeUpsideDownCard() {
 		panel.cardsImages.remove(0);
 		panel.repaint();
+	}
+	
+	public void clear() {
+		updateLabel(0);
+		panel.cardsImages.clear();
+		panel.remove(resetButton);
+		
+		repaint();
 	}
 }

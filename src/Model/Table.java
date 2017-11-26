@@ -18,4 +18,9 @@ public class Table {
 	public void addPoints(int numPoints) {
 		points += numPoints;
 	}
+	
+	public void reset() {
+		cards.clear();
+		points = 0;
+	}
 }

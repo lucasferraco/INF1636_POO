@@ -110,8 +110,6 @@ public class GamblerController {
 		gambler.setState(result);
 		
 		if (result == PlayerState.Won) {
-			System.out.println("player " + gambler.id + " points = " + gambler.getPoints());
-			System.out.println("player " + gambler.id + " bet = " + gambler.getBet());
 			if (gambler.getPoints() == 21) {
 				gambler.addChips((5 * gambler.getBet()) / 2);
 			}
@@ -122,8 +120,6 @@ public class GamblerController {
 		else if (result == PlayerState.Draw) {
 			gambler.addChips(gambler.getBet());
 		}
-		System.out.println("player " + gambler.id + " chips = " + gambler.getChips());
-		System.out.println("state " + gambler.getState());
 		
 		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
 		view.addResultLabel(gambler.getState());
@@ -131,10 +127,9 @@ public class GamblerController {
 	}
 
 	public void reset() {
-		gambler.setState(PlayerState.Playing);
 		gambler.reset();
 		
+		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
 		view.clear();
-		view.enablePlayingButtons();
 	}
 }

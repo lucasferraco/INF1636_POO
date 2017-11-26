@@ -63,8 +63,10 @@ public class Gambler {
 	}
 
 	public void reset() {
-		cards.clear();
+		state = PlayerState.Betting;
 		points = 0;
+		cards.clear();
+		
 		totalBet = 0;
 	}
 }
