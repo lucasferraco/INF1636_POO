@@ -5,23 +5,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import View.*;
-import Controller.GamblerController;
-import Model.Gambler;
-import Model.Card;
-import Model.Suit;
+import Model.*;
 
 public final class GameController {
 	private ArrayList<Card> deck;
-	private int numberOfPlayers;
-	private ArrayList<GamblerScreen> gamblersScreens;
-	private ArrayList<GamblerController> gamblersControllers = new ArrayList<GamblerController>();
-	private int currentPlayer = 1;
+	private TableScreen tableView;
+	private Table table;
 	
+	private int numberOfPlayers;
+	private ArrayList<GamblerController> gamblersControllers;
+	private int currentPlayer;
+	
+	// Sligleton Definition
 	private static final GameController theOnlyInstance = new GameController();
 	
 	private GameController() {
 		deck = new ArrayList<Card>();
-		gamblersScreens = new ArrayList<GamblerScreen>();
 		
 		HomeScreen home = new HomeScreen(this);
 		home.setVisible(true);
@@ -29,6 +28,31 @@ public final class GameController {
 	
 	public static GameController getInstance() {
 		return theOnlyInstance;
+	}
+	
+	public void initializeGame(int numberOfPlayers) {
+		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+		
+		table = new Table();
+		tableView = new TableScreen(screenSize.getWidth()/2, 200);
+		tableView.setVisible(true);
+		initializeDeck();
+		shuffleDeck();
+		
+		this.numberOfPlayers = numberOfPlayers;
+		currentPlayer = -1;
+		gamblersControllers = new ArrayList<GamblerController>();
+		
+		for(int i = 0; i < numberOfPlayers; i++) {
+			gamblersControllers.add(new GamblerController(i));
+			gamblersControllers.get(i).hit();
+		}
+		
+		for(int i = 0; i < numberOfPlayers; i++)
+			gamblersControllers.get(i).hit();
+		
+		tableView.drawUpsideDownCard();
+		getNewCard();
 	}
 	
 	public void initializeDeck() {
@@ -44,29 +68,62 @@ public final class GameController {
 		Collections.shuffle(deck);
 	}
 	
-	public void createPlayersViews(int numberOfPlayers) {
-		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+	private void getNewCard() {
+		Card tableCard = deck.remove(0);
 		
-		this.numberOfPlayers = numberOfPlayers;
-		double width = screenSize.getWidth()/(numberOfPlayers + 1);
-		double height = screenSize.getHeight() / 3;
+		table.cards.add(tableCard);
+		table.addPoints(tableCard.number);
 		
-		double totalWidth = 100;
-		double totalHeight = screenSize.getHeight()/2 + 50;
-		
-		TableScreen table = new TableScreen(screenSize.getWidth()/2, 200);
-		table.setVisible(true);
+		tableView.updateLabel(table.getPoints());
+		tableView.panel.drawCard(tableCard.imageString());
+	}
+	
+	public void endRound() {
+		boolean everyPlayerHasEnded = true;
 		
 		for(int i = 0; i < numberOfPlayers; i++) {
-			GamblerScreen frame = new GamblerScreen(String.valueOf(i+1), width, height, totalWidth, totalHeight);
-			GamblerController gamblerController = new GamblerController(new Gambler(i+1), frame);
+			PlayerState playerCurrentState = gamblersControllers.get(i).getPlayerState();
 			
-			gamblersControllers.add(gamblerController);
-			gamblersScreens.add(frame);
-			frame.setVisible(true);
-			totalWidth += width + 10;
+			if (playerCurrentState == PlayerState.Playing) {
+				everyPlayerHasEnded = false;
+				break;
+			}
 		}
+		
+		if (everyPlayerHasEnded) {
+			tableView.removeUpsideDownCard();
+			getNewCard();
 			
+			while (table.getPoints() < 17 )
+				getNewCard();
+			
+			if (table.getPoints() > 21) {
+				for(int i = 0; i < numberOfPlayers; i++) {
+					if (gamblersControllers.get(i).getPlayerState() == PlayerState.Waiting) {
+						gamblersControllers.get(i).setResult(PlayerState.Won);
+						System.out.println("player " + (i+1) + " - WON");
+					}
+				}
+			}
+			else {
+				int tablePoints = table.getPoints();
+				
+				for(int i = 0; i < numberOfPlayers; i++) {
+					int playerPoints = gamblersControllers.get(i).getPlayerPoints();
+					PlayerState playerState = gamblersControllers.get(i).getPlayerState();
+					
+					if (playerState == PlayerState.Waiting) {
+						int result = playerPoints - tablePoints;
+						result /= Math.abs(result);
+						
+						PlayerState resultState = PlayerState.getStateWith(result);
+						gamblersControllers.get(i).setResult(resultState);
+						System.out.println("player " + (i+1) + " - " + resultState);
+					}
+//					gamblersControllers.get(i).reset();
+				}
+			}
+		}
 	}
 	
 	public Card popCard() {	

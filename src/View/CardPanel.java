@@ -8,9 +8,7 @@ import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
-
-public class GamblerScreenPanel extends JPanel {	
+public class CardPanel extends JPanel {	
 	public ArrayList<Image> cardsImages = new ArrayList<Image>();
 	
 	public void drawCard(String cardImageStr) {
@@ -24,14 +22,16 @@ public class GamblerScreenPanel extends JPanel {
 		}
 		
 		cardsImages.add(image);
+		repaint();
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
 		int panelSize = getSize().width;
 		int posX = -50;
-		int posY = 50;
+		int posY = 70;
 		
 		for(Image img: cardsImages) {
 			if (panelSize < posX + img.getWidth(null)){
