@@ -122,7 +122,7 @@ public final class GameController {
 				for(int i = 0; i < numberOfPlayers; i++) {
 					if (gamblersControllers.get(i).getPlayerState() == PlayerState.Waiting) {
 						gamblersControllers.get(i).setResult(PlayerState.Won);
-						System.out.println("player " + (i+1) + " - WON");
+						System.out.println("player " + (i+1) + " chips = " + gamblersControllers.get(i).getPlayerState());
 					}
 				}
 			}
@@ -135,11 +135,12 @@ public final class GameController {
 					
 					if (playerState == PlayerState.Waiting) {
 						int result = playerPoints - tablePoints;
-						result /= Math.abs(result);
+						if (result != 0)
+							result /= Math.abs(result);
 						
 						PlayerState resultState = PlayerState.getStateWith(result);
 						gamblersControllers.get(i).setResult(resultState);
-						System.out.println("player " + (i+1) + " - " + resultState);
+						System.out.println("player " + (i+1) + " chips = " + gamblersControllers.get(i).getPlayerState());
 					}
 //					gamblersControllers.get(i).reset();
 				}

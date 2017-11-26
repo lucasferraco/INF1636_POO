@@ -31,7 +31,7 @@ public class CardPanel extends JPanel {
 		
 		int panelSize = getSize().width;
 		int posX = -50;
-		int posY = 70;
+		int posY = 180;
 		
 		for(Image img: cardsImages) {
 			if (panelSize < posX + img.getWidth(null)){

@@ -37,6 +37,7 @@ public class GamblerController {
 	}
 	
 	public void setBettingView() {
+		view.toFront();
 		view.enableBettingButtons();
 	}
 	
@@ -77,9 +78,23 @@ public class GamblerController {
 		}
 	}
 	
+	public void doublePlay() {
+		bet(gambler.getBet());
+		hit();
+		
+		if (gambler.getPoints() <= 21) {
+			stand();
+		}
+	}
+	
 	public void stand() {
 		view.disablePlayingButtons();
 		gambler.setState(PlayerState.Waiting);
+		gameManager.endRound();
+	}
+	
+	public void surrender() {
+		setResult(PlayerState.Surrendered);
 		gameManager.endRound();
 	}
 
@@ -93,14 +108,33 @@ public class GamblerController {
 	
 	public void setResult(PlayerState result) {
 		gambler.setState(result);
-		System.out.println("setResult " + gambler.getState());
+		
+		if (result == PlayerState.Won) {
+			System.out.println("player " + gambler.id + " points = " + gambler.getPoints());
+			System.out.println("player " + gambler.id + " bet = " + gambler.getBet());
+			if (gambler.getPoints() == 21) {
+				gambler.addChips((5 * gambler.getBet()) / 2);
+			}
+			else {
+				gambler.addChips(2 * gambler.getBet());
+			}
+		}
+		else if (result == PlayerState.Draw) {
+			gambler.addChips(gambler.getBet());
+		}
+		System.out.println("player " + gambler.id + " chips = " + gambler.getChips());
+		System.out.println("state " + gambler.getState());
+		
+		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
 		view.addResultLabel(gambler.getState());
 		view.disablePlayingButtons();
 	}
 
 	public void reset() {
-		view.clear();
 		gambler.setState(PlayerState.Playing);
+		gambler.reset();
+		
+		view.clear();
 		view.enablePlayingButtons();
 	}
 }

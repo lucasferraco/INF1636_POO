@@ -27,6 +27,7 @@ public class GamblerScreen extends JFrame {
 	// Action Buttons
 	private JButton betButton = new JButton("bet");
 	private JButton hitButton = new JButton("hit");
+	private JButton doubleButton = new JButton("double");
 	private JButton standButton = new JButton("stand");
 	private JButton surrenderButton = new JButton("surrender");
 	
@@ -37,6 +38,7 @@ public class GamblerScreen extends JFrame {
 		// Add actions buttons to panel
 		panel.add(betButton);
 		panel.add(hitButton);
+		panel.add(doubleButton);
 		panel.add(standButton);
 		panel.add(surrenderButton);
 		
@@ -71,13 +73,26 @@ public class GamblerScreen extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				controller.hit();
 			}
-			
+		});
+		
+		doubleButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.doublePlay();
+			}
 		});
 		
 		standButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {		
 				controller.stand();
+			}
+		});
+		
+		surrenderButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {		
+				controller.surrender();
 			}
 		});
 		
@@ -99,12 +114,16 @@ public class GamblerScreen extends JFrame {
 	
 	public void enablePlayingButtons() {
 		hitButton.setEnabled(true);
+		doubleButton.setEnabled(true);
 		standButton.setEnabled(true);
+		surrenderButton.setEnabled(true);
 	}
 	
 	public void disablePlayingButtons() {
 		hitButton.setEnabled(false);
+		doubleButton.setEnabled(false);
 		standButton.setEnabled(false);
+		surrenderButton.setEnabled(false);
 	}
 	
 	public void addResultLabel(PlayerState state) {
@@ -116,11 +135,14 @@ public class GamblerScreen extends JFrame {
 			resultLabel.setForeground(Color.yellow);
 			resultLabel.setText("You WON. Congratulations!");
 		}
-		else {
+		else if (state == PlayerState.Draw) {
 			resultLabel.setForeground(Color.white);
-			resultLabel.setText("DRAW. You'll receive your bet back.");
+			resultLabel.setText("DRAW. You receive your bet back.");
 		}
-		System.out.println("addResultLabel " + resultLabel.getText());
+		else { // if (state == PlayerState.Surrendered)
+			resultLabel.setForeground(Color.gray);
+			resultLabel.setText("SURRENDERED. Wait for the next round.");
+		}
 		panel.add(resultLabel);
 	}
 	

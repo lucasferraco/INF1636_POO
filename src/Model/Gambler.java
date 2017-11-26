@@ -32,10 +32,6 @@ public class Gambler {
 	
 	public void setState(PlayerState newState) {
 		state = newState;
-		
-		if (newState == PlayerState.Playing) {
-			reset();
-		}
 	}
 	
 	public int getPoints() {
@@ -58,7 +54,6 @@ public class Gambler {
 		totalBet += newBet;
 		totalChips -= newBet;
 	}
-
 	public int getChips() {
 		return totalChips;
 	}
@@ -70,5 +65,6 @@ public class Gambler {
 	public void reset() {
 		cards.clear();
 		points = 0;
+		totalBet = 0;
 	}
 }
