@@ -26,10 +26,11 @@ public class GamblerScreen extends JFrame {
 	
 	// Action Buttons
 	private JButton betButton = new JButton("bet");
+	private JButton surrenderButton = new JButton("surrender");
+	private JButton buyChipsButton = new JButton("buy chips");
 	private JButton hitButton = new JButton("hit");
 	private JButton doubleButton = new JButton("double");
 	private JButton standButton = new JButton("stand");
-	private JButton surrenderButton = new JButton("surrender");
 	
 	public GamblerScreen(String gamblerId, double posX, double posY, double width, double height) {
 		panel = new CardPanel();		
@@ -37,10 +38,11 @@ public class GamblerScreen extends JFrame {
 		
 		// Add actions buttons to panel
 		panel.add(betButton);
+		panel.add(surrenderButton);
+		panel.add(buyChipsButton);
 		panel.add(hitButton);
 		panel.add(doubleButton);
 		panel.add(standButton);
-		panel.add(surrenderButton);
 		
 		// Add info labels to panel
 		panel.add(pointsLabel);
@@ -56,15 +58,6 @@ public class GamblerScreen extends JFrame {
 		setLocation(new Point((int) posX,(int) posY));
 		
 		setTitle("Gambler " + gamblerId);
-	}
-	
-	public void updatePointsLabel(int points) {
-		pointsLabel.setText("Points: " + String.valueOf(points));
-	}
-	
-	public void updateChipsLabels(int bet, int totalChips) {
-		bettingLabel.setText("Bet: " + String.valueOf(bet));
-		totalChipsLabel.setText("Chips: " + String.valueOf(totalChips));
 	}
 	
 	public void setListeners(GamblerController controller) {
@@ -89,6 +82,13 @@ public class GamblerScreen extends JFrame {
 			}
 		});
 		
+		betButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {		
+				controller.endBetting();
+			}
+		});
+		
 		surrenderButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {		
@@ -96,12 +96,21 @@ public class GamblerScreen extends JFrame {
 			}
 		});
 		
-		betButton.addActionListener(new ActionListener() {
+		buyChipsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {		
-				controller.endBetting();
+				controller.buyChips();
 			}
 		});
+	}
+	
+	public void updatePointsLabel(int points) {
+		pointsLabel.setText("Points: " + String.valueOf(points));
+	}
+	
+	public void updateChipsLabels(int bet, int totalChips) {
+		bettingLabel.setText("Bet: " + String.valueOf(bet));
+		totalChipsLabel.setText("Chips: " + String.valueOf(totalChips));
 	}
 	
 	public void enableBettingButtons() {
@@ -110,6 +119,10 @@ public class GamblerScreen extends JFrame {
 	
 	public void disableBettingButtons() {
 		betButton.setEnabled(false);
+	}
+	
+	public void enableBuyButton(boolean enable) {
+		buyChipsButton.setEnabled(enable);
 	}
 	
 	public void enablePlayingButtons() {

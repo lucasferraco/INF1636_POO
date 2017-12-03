@@ -14,6 +14,9 @@ public class Gambler {
 	
 	private int totalBet;
 	private int totalChips;
+	
+	private int defaultValue = 1000;
+	private int totalBuys = 2;
 
 	public Gambler(int id) {
 		this.id = id;
@@ -66,6 +69,16 @@ public class Gambler {
 
 	public void addChips(int newChips) {
 		totalChips += newChips;
+	}
+	
+	public int addBuyedChips() {
+		if (totalBuys == 0) {
+			return 0;
+		}
+		
+		totalBuys--;
+		totalChips += defaultValue / 2;
+		return totalBuys;
 	}
 
 	public void reset() {

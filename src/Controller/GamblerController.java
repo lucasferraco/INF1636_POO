@@ -52,6 +52,21 @@ public class GamblerController {
 		gameManager.nextPlayerToBet();
 	}
 	
+	public void surrender() {
+		setResult(PlayerState.Surrendered);
+		gameManager.endRound();
+	}
+	
+	public void buyChips() {
+		int remainingBuys = gambler.addBuyedChips();
+		
+		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
+		
+		if (remainingBuys == 0) {
+			view.enableBuyButton(false);
+		}
+	}
+	
 	public void play() {
 		gambler.setState(PlayerState.Playing);
 		view.enablePlayingButtons();
@@ -90,11 +105,6 @@ public class GamblerController {
 	public void stand() {
 		view.disablePlayingButtons();
 		gambler.setState(PlayerState.Waiting);
-		gameManager.endRound();
-	}
-	
-	public void surrender() {
-		setResult(PlayerState.Surrendered);
 		gameManager.endRound();
 	}
 
