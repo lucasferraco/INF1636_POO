@@ -3,10 +3,9 @@ package View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.FlowLayout;
 import java.awt.Point;
 
-import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JFrame;
@@ -26,20 +25,21 @@ public class GamblerScreen extends JFrame {
 	
 	// Action Buttons
 	private JButton betButton = new JButton("bet");
-	private JButton surrenderButton = new JButton("surrender");
 	private JButton buyChipsButton = new JButton("buy chips");
+	private JButton surrenderButton = new JButton("surrender");
 	private JButton hitButton = new JButton("hit");
 	private JButton doubleButton = new JButton("double");
 	private JButton standButton = new JButton("stand");
 	
 	public GamblerScreen(String gamblerId, double posX, double posY, double width, double height) {
-		panel = new CardPanel();		
+		panel = new CardPanel();
+		panel.setLayout(new FlowLayout());
 		panel.setBackground(new Color(44, 128, 65));
 		
 		// Add actions buttons to panel
 		panel.add(betButton);
-		panel.add(surrenderButton);
 		panel.add(buyChipsButton);
+		panel.add(surrenderButton);
 		panel.add(hitButton);
 		panel.add(doubleButton);
 		panel.add(standButton);
@@ -89,17 +89,17 @@ public class GamblerScreen extends JFrame {
 			}
 		});
 		
-		surrenderButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {		
-				controller.surrender();
-			}
-		});
-		
 		buyChipsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {		
 				controller.buyChips();
+			}
+		});
+		
+		surrenderButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {		
+				controller.surrender();
 			}
 		});
 	}
@@ -115,9 +115,13 @@ public class GamblerScreen extends JFrame {
 	
 	public void enableBettingButtons() {
 		betButton.setEnabled(true);
+		surrenderButton.setEnabled(true);
 	}
 	
 	public void disableBettingButtons() {
+		panel.remove(resultLabel);
+		panel.repaint();
+		
 		betButton.setEnabled(false);
 	}
 	
@@ -129,14 +133,20 @@ public class GamblerScreen extends JFrame {
 		hitButton.setEnabled(true);
 		doubleButton.setEnabled(true);
 		standButton.setEnabled(true);
-		surrenderButton.setEnabled(true);
 	}
 	
 	public void disablePlayingButtons() {
 		hitButton.setEnabled(false);
 		doubleButton.setEnabled(false);
 		standButton.setEnabled(false);
-		surrenderButton.setEnabled(false);
+	}
+	
+	public void displayError(String errorDesc) {
+		resultLabel.setForeground(new Color(128, 44, 49));
+		resultLabel.setText(errorDesc);
+		
+		panel.add(resultLabel);
+		panel.validate();
 	}
 	
 	public void addResultLabel(PlayerState state) {
@@ -153,15 +163,19 @@ public class GamblerScreen extends JFrame {
 			resultLabel.setText("DRAW. You receive your bet back.");
 		}
 		else if (state == PlayerState.Surrendered) {
-			resultLabel.setForeground(Color.gray);
+			resultLabel.setForeground(Color.darkGray);
 			resultLabel.setText("SURRENDERED. Wait for the next round.");
+			
+			disableBettingButtons();
 		}
 		else { // if (state == PlayerState.Broke)
 			resultLabel.setForeground(new Color(128, 44, 49));
 			resultLabel.setText("BROKE. Better luck next time!");
 		}
 		
+		surrenderButton.setEnabled(false);
 		panel.add(resultLabel);
+		panel.repaint();
 	}
 	
 	public void clear() {

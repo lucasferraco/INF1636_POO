@@ -19,8 +19,12 @@ public class Table {
 		points += numPoints;
 	}
 	
-	public void reset() {
+	public ArrayList<Card> reset() {
+		ArrayList<Card> myCards = cards;
+		
 		cards.clear();
 		points = 0;
+		
+		return myCards;
 	}
 }

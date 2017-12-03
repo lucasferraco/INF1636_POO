@@ -7,6 +7,7 @@ import View.TableScreen;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import Model.Card;
 
@@ -48,13 +49,25 @@ public class GamblerController {
 	}
 	
 	public void endBetting() {
-		view.disableBettingButtons();
-		gameManager.nextPlayerToBet();
+		if (gambler.getBet() != 0) {
+			view.disableBettingButtons();
+			gameManager.nextPlayerToBet();
+		}
+		else {
+			view.displayError("You have to bet at least 1 chip.");
+		}
 	}
 	
 	public void surrender() {
+		PlayerState currentState = gambler.getState();
 		setResult(PlayerState.Surrendered);
-		gameManager.endRound();
+		
+		if (currentState == PlayerState.Playing) {
+			gameManager.endRound();
+		}
+		else {
+			gameManager.nextPlayerToBet();
+		}
 	}
 	
 	public void buyChips() {
@@ -140,12 +153,20 @@ public class GamblerController {
 		view.disablePlayingButtons();
 	}
 
-	public void reset() {
+	public ArrayList<Card> reset() {
+		ArrayList<Card> myCards = new ArrayList<Card>();
+		
 		if (gambler.getState() != PlayerState.Broke) {
-			gambler.reset();
+			myCards = gambler.reset();
 			
 			view.updateChipsLabels(gambler.getBet(), gambler.getChips());
-			view.clear();			
+			view.clear();		
 		}
+		else if (!gambler.cards.isEmpty()) {
+			myCards = gambler.cards;
+			gambler.cards.clear();
+		}
+		
+		return myCards;
 	}
 }

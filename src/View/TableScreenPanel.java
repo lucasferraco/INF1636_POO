@@ -6,10 +6,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Controller.ChipButtonListener;
+
 public class TableScreenPanel extends JPanel {
+	private ArrayList<Image> chipsImages = new ArrayList<Image>();
 	public ArrayList<Image> cardsImages = new ArrayList<Image>();
 	private Image background = null;
 	
@@ -22,13 +27,28 @@ public class TableScreenPanel extends JPanel {
 				
 		try {
 			image = ImageIO.read(getClass().getResourceAsStream("/" + cardImageStr + ".gif"));
-		} catch(IOException e) {
+		}
+		catch(IOException e) {
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
 		
 		cardsImages.add(image);
 		repaint();
+	}
+	
+	public void createChipButton(int value) {
+		Image image = null;
+		
+		try {
+			image = ImageIO.read(getClass().getResourceAsStream("/ficha_" + value + ".png"));
+		}
+		catch(IOException e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
+		
+		chipsImages.add(image);
 	}
 	
 	@Override

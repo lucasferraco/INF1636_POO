@@ -69,7 +69,18 @@ public final class GameController {
 		
 		if (currentPlayer == numberOfPlayers) {
 			currentPlayer = 0;
-			endBets();
+			
+			int totalSurrendered = 0;
+			for(int i = 0; i < numberOfPlayers; i++) {
+				if (gamblersControllers.get(i).getPlayerState() == PlayerState.Surrendered) {
+					totalSurrendered++;
+				}
+			}
+			
+			if (totalSurrendered == numberOfPlayers)
+				tableView.showResetOption();
+			else
+				endBets();
 		}
 		else {
 			gamblersControllers.get(currentPlayer).setBettingView();
@@ -78,12 +89,15 @@ public final class GameController {
 	
 	public void endBets() {
 		// Prepare playing scenario
-		for(int i = 0; i < numberOfPlayers; i++)
-			gamblersControllers.get(i).play();
-			
+		for(int i = 0; i < numberOfPlayers; i++) 
+			if(gamblersControllers.get(i).getPlayerState() != PlayerState.Surrendered) 
+				gamblersControllers.get(i).play();
+		
 		for(int i = 0; i < numberOfPlayers; i++) {
-			gamblersControllers.get(i).hit();
-			gamblersControllers.get(i).hit();
+			if(gamblersControllers.get(i).getPlayerState() != PlayerState.Surrendered) {
+				gamblersControllers.get(i).hit();
+				gamblersControllers.get(i).hit();
+			}
 		}
 		
 		tableView.drawUpsideDownCard();
@@ -158,21 +172,26 @@ public final class GameController {
 	}
 	
 	public void reset() {
+		ArrayList<Card> distributedCards = new ArrayList<Card>();
+		
 		for(int i = 0; i < numberOfPlayers; i++)
-			gamblersControllers.get(i).reset();
+			distributedCards.addAll(gamblersControllers.get(i).reset());
 		
 		for(int i = 0; i < numberOfPlayers; i++) {
 			if (	gamblersControllers.get(i).getPlayerState() == PlayerState.Broke) {
 				gamblersControllers.remove(i);
 				numberOfPlayers--;
 				i--;
-			}			
+			}
 		}
 		
-		table.reset();
+		distributedCards.addAll(table.reset());
 		tableView.clear();
 
 		currentPlayer = -1;
+		deck.addAll(distributedCards);
+		shuffleDeck();
+		
 		nextPlayerToBet();
 	}
 }

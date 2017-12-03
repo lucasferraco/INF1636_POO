@@ -85,7 +85,7 @@ public class TableScreen extends JFrame {
 	
 	public void showResetOption() {
 		panel.add(resetButton);
-		repaint();
+		validate();
 	}
 	
 	public void drawUpsideDownCard() {

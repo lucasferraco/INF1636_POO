@@ -81,11 +81,14 @@ public class Gambler {
 		return totalBuys;
 	}
 
-	public void reset() {
+	public ArrayList<Card> reset() {
+		ArrayList<Card> myCards = cards;
+		
 		state = PlayerState.Betting;
 		points = 0;
 		cards.clear();
 		
 		totalBet = 0;
+		return myCards;
 	}
 }
