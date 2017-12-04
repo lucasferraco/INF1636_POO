@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import View.TableScreenPanel;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -24,7 +25,10 @@ import java.util.ArrayList;
 public class TableScreen extends JFrame implements Subject, MouseListener {
 	public TableScreenPanel panel;
 	private JLabel pointsLabel = new JLabel("Points: 0");
+	
 	private JButton resetButton = new JButton("reset");
+	private JButton saveButton = new JButton("save");
+	private JButton endButton = new JButton("end");
 	
 	private int[] chipsValues = {1, 5, 10, 20, 50, 100};
 	private ArrayList<Observer> observers;
@@ -47,9 +51,12 @@ public class TableScreen extends JFrame implements Subject, MouseListener {
 		setSize(891, 400);
 		setLocation(new Point((int) posX - 445, (int) posY - 200));
 		
-		pointsLabel.setLocation((getWidth() - pointsLabel.getWidth())/2, (getHeight() - pointsLabel.getHeight())/2);
+		pointsLabel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
 		pointsLabel.setForeground(Color.white);
 		panel.add(pointsLabel);
+		
+		panel.add(saveButton);
+		panel.add(endButton);
 		
 		addMouseListener(this);
 		observers = new ArrayList<Observer>();
@@ -60,6 +67,14 @@ public class TableScreen extends JFrame implements Subject, MouseListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.reset();
+			}
+		});
+		
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileScreen saveScreen = new FileScreen();
+				saveScreen.showSaveScreen();
 			}
 		});
 	}
@@ -116,12 +131,9 @@ public class TableScreen extends JFrame implements Subject, MouseListener {
 		int x = arg0.getX();
 		int y = arg0.getY();
 		int chipIndex = panel.findChip(x, y);
-		System.out.println("(x, y) clicked = (" + x + ", " + y + ")");
 		
-		if (chipIndex != -1) {
+		if (chipIndex != -1)
 			notifyObservers(chipsValues[chipIndex]);
-			System.out.println("chipValue = " + chipsValues[chipIndex]);
-		}
 	}
 
 	@Override

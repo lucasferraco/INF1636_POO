@@ -118,14 +118,6 @@ public class GamblerController {
 		gambler.setState(PlayerState.Waiting);
 		gameManager.endRound();
 	}
-
-	public PlayerState getPlayerState() {
-		return gambler.getState();
-	}
-	
-	public int getPlayerPoints() {
-		return gambler.getPoints();
-	}
 	
 	public void setResult(PlayerState result) {
 		gambler.setState(result);
@@ -167,4 +159,27 @@ public class GamblerController {
 		
 		return myCards;
 	}
+	
+	// Facade methods to access Gambler infos
+
+	public PlayerState getPlayerState() {
+		return gambler.getState();
+	}
+	
+	public int getPlayerPoints() {
+		return gambler.getPoints();
+	}
+	
+	public int getPlayerChips() {
+		return gambler.getChips();
+	}
+	
+	public int getPlayerBet() {
+		return gambler.getBet();
+	}
+	
+	public ArrayList<Card> getPlayerCards() {
+		return gambler.cards;
+	}
+	
 }

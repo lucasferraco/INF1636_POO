@@ -1,0 +1,32 @@
+Table
+Points 11
+Cards 11 Hearts
+
+Gambler 0
+Chips 980
+Bet 20
+Points 15
+State Playing
+Cards 12 Diamonds 3 Diamonds
+
+Gambler 1
+Chips 990
+Bet 10
+Points 25
+State Lost
+Cards 12 Spades 13 Hearts
+
+Gambler 2
+Chips 900
+Bet 100
+Points 7
+State Playing
+Cards 4 Spades 3 Spades
+
+Gambler 3
+Chips 999
+Bet 1
+Points 13
+State Playing
+Cards 2 Clubs 11 Clubs
+

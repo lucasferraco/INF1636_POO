@@ -1,6 +1,8 @@
 package Controller;
 
 import java.awt.Dimension;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -145,12 +147,9 @@ public final class GameController implements Observer {
 				getNewCard();
 			
 			if (table.getPoints() > 21) {
-				for(int i = 0; i < numberOfPlayers; i++) {
-					if (gamblersControllers.get(i).getPlayerState() == PlayerState.Waiting) {
+				for(int i = 0; i < numberOfPlayers; i++)
+					if (gamblersControllers.get(i).getPlayerState() == PlayerState.Waiting)
 						gamblersControllers.get(i).setResult(PlayerState.Won);
-						System.out.println("player " + (i+1) + " chips = " + gamblersControllers.get(i).getPlayerState());
-					}
-				}
 			}
 			else {
 				int tablePoints = table.getPoints();
@@ -173,6 +172,8 @@ public final class GameController implements Observer {
 			tableView.showResetOption();
 		}
 	}
+	
+	// Game Flow Methods
 	
 	public void reset() {
 		ArrayList<Card> distributedCards = new ArrayList<Card>();
@@ -198,11 +199,76 @@ public final class GameController implements Observer {
 		nextPlayerToBet();
 	}
 
+	public void save(String path) {
+		System.out.println("GameController : save() : " + path );
+		
+		try {
+			PrintWriter writer = new PrintWriter(path + ".txt", "UTF-8");
+			
+			// Store table
+			
+			writer.printf("Table");
+			writer.println();
+			
+			writer.printf("Points " + table.getPoints());
+			writer.println();
+			
+			writer.printf("Cards");
+			for(Card card : table.cards)
+				writer.printf(" " + card.number + " " + card.suit);
+			
+			writer.println();
+			writer.println();
+			
+			// Store players
+			
+			for (int i = 0; i < numberOfPlayers; i++) {
+				writer.printf("Gambler " + i); // Player id
+				writer.println();
+				
+				writer.printf("Chips " + gamblersControllers.get(i).getPlayerChips());
+				writer.println();
+				
+				writer.printf("Bet " + gamblersControllers.get(i).getPlayerBet());
+				writer.println();
+				
+				writer.printf("Points " + gamblersControllers.get(i).getPlayerPoints());
+				writer.println();
+				
+				writer.printf("State " + gamblersControllers.get(i).getPlayerState());
+				writer.println();
+				
+				writer.printf("Cards");
+				for(Card card : gamblersControllers.get(i).getPlayerCards())
+					writer.printf(" " + card.number + " " + card.suit);
+				
+				writer.println();
+				writer.println();
+			}
+			
+			writer.close();
+		} 
+		catch (IOException e) {
+			System.out.println("GameController : save() : error = " + e.getMessage());
+			System.exit(1);
+		}
+		
+		end();
+	}
+	
+	public void retrieveSavedGame() {
+		
+	}
+	
+	public void end() {
+		System.exit(0);
+	}
+	
 	// Observer Methods
 	
 	@Override
 	public void update(int value) {
 		gamblersControllers.get(currentPlayer).bet(value);
-		System.out.println("chipValue on observer = " + value);
 	}
+	
 }

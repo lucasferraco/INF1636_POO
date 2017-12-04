@@ -61,7 +61,6 @@ public class TableScreenPanel extends JPanel {
 		
 		int posY = getSize().height - 50;
 		g.drawImage(image, chipsXPositions[chipIndex], posY, 50, 50, null);
-		System.out.println("(x, y) chip " + value + " = (" + chipsXPositions[chipIndex] + ", " + posY + ")");
 	}
 	
 	public int findChip(int x, int y) {
