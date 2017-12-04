@@ -11,8 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import Controller.ChipButtonListener;
-
 public class TableScreenPanel extends JPanel {
 	private int[] chipsXPositions = new int[6];
 	private int chipWidth, chipHeight;

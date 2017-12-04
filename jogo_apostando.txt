@@ -1,0 +1,30 @@
+Table
+Points 0
+Cards
+
+Gamblers 4
+Chips 1050
+Bet 0
+Points 0
+State 2
+Cards
+
+Chips 1010
+Bet 0
+Points 0
+State 2
+Cards
+
+Chips 1001
+Bet 0
+Points 0
+State 2
+Cards
+
+Chips 900
+Bet 0
+Points 0
+State 2
+Cards
+
+End

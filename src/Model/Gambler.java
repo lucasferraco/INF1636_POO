@@ -53,6 +53,10 @@ public class Gambler {
 		return totalBet;
 	}
 
+	public void setBet(int bet) {
+		totalBet = bet;
+	}
+
 	public void addBet(int newBet) {
 		if (totalChips == 0)
 			newBet = 0;
@@ -65,6 +69,10 @@ public class Gambler {
 	
 	public int getChips() {
 		return totalChips;
+	}
+	
+	public void setChips(int chips) {
+		totalChips = chips;
 	}
 
 	public void addChips(int newChips) {
@@ -91,4 +99,5 @@ public class Gambler {
 		totalBet = 0;
 		return myCards;
 	}
+	
 }

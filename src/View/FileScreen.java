@@ -21,7 +21,6 @@ public class FileScreen extends JFrame {
 		panel.setBackground(new Color(44, 128, 65));
 		
 		fileChooser = new JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setCurrentDirectory(new File("."));
 		panel.add(fileChooser);
 		
@@ -39,7 +38,7 @@ public class FileScreen extends JFrame {
         
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            System.out.println("Saving " + file.getAbsolutePath());
+            
             controller.save(file.getAbsolutePath());
         }
 	}
@@ -47,10 +46,12 @@ public class FileScreen extends JFrame {
 	public void showChooseFileScreen() {
 		fileChooser.setDialogTitle("Recuperar Jogo Salvo");
 		
-		int returnVal = fileChooser.showSaveDialog(FileScreen.this);
+		int returnVal = fileChooser.showOpenDialog(FileScreen.this);
         
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
+            
+            controller.retrieveSavedGame(file.getAbsolutePath());
         }
 	}
 	

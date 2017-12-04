@@ -160,26 +160,63 @@ public class GamblerController {
 		return myCards;
 	}
 	
+	public void updateUI() {
+		view.updatePointsLabel(gambler.getPoints());
+		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
+		
+		PlayerState gamblerState = gambler.getState();
+		if (gamblerState != PlayerState.Betting) {
+			for(Card card : gambler.cards) 
+				view.panel.drawCard(card.imageString());
+			
+			if (gamblerState.stateValue <= 1)
+				setResult(gamblerState);
+			
+			if (gamblerState == PlayerState.Playing)
+				view.enablePlayingButtons();
+		}
+	}
+	
 	// Facade methods to access Gambler infos
 
 	public PlayerState getPlayerState() {
 		return gambler.getState();
 	}
 	
+	public void setPlayerState(PlayerState state) {
+		gambler.setState(state);
+	}
+	
 	public int getPlayerPoints() {
 		return gambler.getPoints();
+	}
+	
+	public void setPlayerPoints(int numPoints) {
+		gambler.addPoints(numPoints);
 	}
 	
 	public int getPlayerChips() {
 		return gambler.getChips();
 	}
 	
+	public void setPlayerChips(int chips) {
+		gambler.setChips(chips);
+	}
+	
 	public int getPlayerBet() {
 		return gambler.getBet();
 	}
 	
+	public void setPlayerBet(int bet) {
+		gambler.setBet(bet);
+	}
+	
 	public ArrayList<Card> getPlayerCards() {
 		return gambler.cards;
+	}
+	
+	public void setPlayerCards(ArrayList<Card> cards) {
+		gambler.cards = cards;
 	}
 	
 }

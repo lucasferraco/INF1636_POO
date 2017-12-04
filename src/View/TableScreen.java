@@ -77,6 +77,13 @@ public class TableScreen extends JFrame implements Subject, MouseListener {
 				saveScreen.showSaveScreen();
 			}
 		});
+		
+		endButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.end();
+			}
+		});
 	}
 	
 	public void updateLabel(int points) {
