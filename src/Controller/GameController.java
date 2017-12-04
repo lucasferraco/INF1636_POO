@@ -6,8 +6,10 @@ import java.util.Collections;
 
 import View.*;
 import Model.*;
+import SupportingFiles.Observer;
+import SupportingFiles.Subject;
 
-public final class GameController {
+public final class GameController implements Observer {
 	private ArrayList<Card> deck;
 	private TableScreen tableView;
 	private Table table;
@@ -15,9 +17,13 @@ public final class GameController {
 	private int numberOfPlayers;
 	public ArrayList<GamblerController> gamblersControllers;
 	public int currentPlayer;
-	
+		
 	// Sligleton Definition
 	private static final GameController theOnlyInstance = new GameController();
+	
+	public static GameController getInstance() {
+		return theOnlyInstance;
+	}
 	
 	private GameController() {
 		deck = new ArrayList<Card>();
@@ -26,19 +32,16 @@ public final class GameController {
 		home.setVisible(true);
 	}
 	
-	public static GameController getInstance() {
-		return theOnlyInstance;
-	}
-	
 	public void initializeGame(int numberOfPlayers) {
 		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		
 		table = new Table();
 		tableView = new TableScreen(screenSize.getWidth()/2, 200);
 		tableView.setListeners(this);
+		tableView.register(this);
 		tableView.setVisible(true);
 		initializeDeck();
-		
+				
 		this.numberOfPlayers = numberOfPlayers;
 		currentPlayer = -1;
 		gamblersControllers = new ArrayList<GamblerController>();
@@ -193,5 +196,13 @@ public final class GameController {
 		shuffleDeck();
 		
 		nextPlayerToBet();
+	}
+
+	// Observer Methods
+	
+	@Override
+	public void update(int value) {
+		gamblersControllers.get(currentPlayer).bet(value);
+		System.out.println("chipValue on observer = " + value);
 	}
 }

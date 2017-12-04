@@ -14,12 +14,20 @@ import javax.swing.JPanel;
 import Controller.ChipButtonListener;
 
 public class TableScreenPanel extends JPanel {
-	private ArrayList<Image> chipsImages = new ArrayList<Image>();
+	private int[] chipsXPositions = new int[6];
+	private int chipWidth, chipHeight;
+	
 	public ArrayList<Image> cardsImages = new ArrayList<Image>();
 	private Image background = null;
 	
 	public TableScreenPanel(Image image) {
 		background = image;
+		
+		int nextChipXPosition = background.getWidth(null) / 2 - 175;
+		for(int i = 0; i < 6; i++) {
+			chipsXPositions[i] = nextChipXPosition;
+			nextChipXPosition += 70;
+		}
 	}
 	
 	public void drawCard(String cardImageStr) {
@@ -37,7 +45,7 @@ public class TableScreenPanel extends JPanel {
 		repaint();
 	}
 	
-	public void createChipButton(int value) {
+	private void drawChips(Graphics g, int value, int chipIndex) {
 		Image image = null;
 		
 		try {
@@ -48,7 +56,30 @@ public class TableScreenPanel extends JPanel {
 			System.exit(1);
 		}
 		
-		chipsImages.add(image);
+		chipWidth = image.getWidth(null) + 20;
+		chipHeight = image.getHeight(null) + 20;
+		
+		int posY = getSize().height - 50;
+		g.drawImage(image, chipsXPositions[chipIndex], posY, 50, 50, null);
+		System.out.println("(x, y) chip " + value + " = (" + chipsXPositions[chipIndex] + ", " + posY + ")");
+	}
+	
+	public int findChip(int x, int y) {
+		int index = -1;
+		int chipsY = getSize().height - 50;
+		
+		if (!(y >= chipsY && y <= chipsY + chipHeight)) {
+			return -1;
+		}
+		
+		for(int i = 0; i < chipsXPositions.length; i++) {
+			if(x >= chipsXPositions[i] && x <= chipsXPositions[i] + chipWidth) {
+				index = i;
+				break;
+			}
+		}
+		
+		return index;
 	}
 	
 	@Override
@@ -56,6 +87,13 @@ public class TableScreenPanel extends JPanel {
 		super.paintComponent(g);
 		
 		g.drawImage(background, 0, 0, this);
+		
+		drawChips(g, 1, 0);
+		drawChips(g, 5, 1);
+		drawChips(g, 10, 2);
+		drawChips(g, 20, 3);
+		drawChips(g, 50, 4);
+		drawChips(g, 100, 5);
 		
 		int panelWidth = getSize().width;
 		int posX = panelWidth / 3 - 50;

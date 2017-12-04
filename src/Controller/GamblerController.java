@@ -2,14 +2,12 @@ package Controller;
 
 import Model.Gambler;
 import Model.PlayerState;
+import Model.Card;
+
 import View.GamblerScreen;
-import View.TableScreen;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Collection;
-
-import Model.Card;
 
 public class GamblerController {
 	private static int nextXPosition = 10;
