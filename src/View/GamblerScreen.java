@@ -45,6 +45,7 @@ public class GamblerScreen extends JFrame {
 		panel.add(standButton);
 		
 		// Add info labels to panel
+		pointsLabel.setForeground(Color.white);
 		panel.add(pointsLabel);
 		panel.add(bettingLabel);
 		panel.add(totalChipsLabel);
@@ -109,6 +110,8 @@ public class GamblerScreen extends JFrame {
 	}
 	
 	public void updateChipsLabels(int bet, int totalChips) {
+		resultLabel.setVisible(false);
+		
 		bettingLabel.setText("Bet: " + String.valueOf(bet));
 		totalChipsLabel.setText("Chips: " + String.valueOf(totalChips));
 	}
@@ -144,6 +147,7 @@ public class GamblerScreen extends JFrame {
 	public void displayError(String errorDesc) {
 		resultLabel.setForeground(new Color(128, 44, 49));
 		resultLabel.setText(errorDesc);
+		resultLabel.setVisible(true);
 		
 		panel.add(resultLabel);
 		panel.validate();
@@ -174,6 +178,7 @@ public class GamblerScreen extends JFrame {
 		}
 		
 		surrenderButton.setEnabled(false);
+		resultLabel.setVisible(true);
 		panel.add(resultLabel);
 		panel.repaint();
 	}
@@ -182,6 +187,7 @@ public class GamblerScreen extends JFrame {
 		updatePointsLabel(0);
 		disablePlayingButtons();
 		
+		resultLabel.setVisible(false);
 		panel.remove(resultLabel);
 		panel.cardsImages.clear();
 		panel.repaint();		

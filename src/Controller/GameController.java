@@ -149,7 +149,7 @@ public final class GameController implements Observer {
 			tableView.removeUpsideDownCard();
 			getNewCard();
 			
-			while (table.getPoints() < 17 )
+			while (table.getPoints() < 17)
 				getNewCard();
 			
 			if (table.getPoints() > 21) {
@@ -372,11 +372,19 @@ public final class GameController implements Observer {
 		
 		updateUI();		
 		
-		for (int i = 0; i < numberOfPlayers; i++)
+		boolean isEndOfRound = true;
+		for (int i = 0; i < numberOfPlayers; i++) {
 			gamblersControllers.get(i).updateUI();
+			
+			PlayerState playerState = gamblersControllers.get(i).getPlayerState();
+			isEndOfRound = playerState != PlayerState.Playing || playerState != PlayerState.Waiting;
+		}
 		
 		if (gamblersControllers.get(0).getPlayerState() == PlayerState.Betting)
 			nextPlayerToBet();
+		
+		if (isEndOfRound)
+			tableView.showResetOption();
 	}
 	
 	private void updateUI() {

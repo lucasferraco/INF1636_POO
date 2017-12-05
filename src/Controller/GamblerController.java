@@ -15,6 +15,8 @@ public class GamblerController {
 	
 	private GamblerScreen view;
 	private Gambler gambler;
+	private int numberOfAces = 0;
+	private int[] acesValues = {-1, -1, -1, -1};
 	
 	public GamblerController(int playerId) {
 		gambler = new Gambler(playerId);
@@ -41,9 +43,17 @@ public class GamblerController {
 	}
 	
 	public void bet(int chipValue) {
-		gambler.addBet(chipValue);
-		
-		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
+		if (gambler.getChips() >= 0 && chipValue <= gambler.getChips()) {
+			gambler.addBet(chipValue);
+			
+			view.updateChipsLabels(gambler.getBet(), gambler.getChips());
+		}
+		else if (gambler.getChips() == 0) {
+			view.displayError("You are all in!");
+		}
+		else {
+			view.displayError("Your bet has to be smaller then your chips.");
+		}
 	}
 	
 	public void endBetting() {
@@ -87,8 +97,34 @@ public class GamblerController {
 		Card removedCard = gameManager.popCard();
 		
 		if (removedCard != null) {
-			gambler.addPoints(removedCard.number);
 			gambler.cards.add(removedCard);
+			
+			if (removedCard.number == 1) {
+				numberOfAces++;
+				
+				if (gambler.getPoints() + 11 > 21) {
+					gambler.addPoints(removedCard.number);
+					acesValues[numberOfAces - 1] = removedCard.number;
+				}
+				else {
+					gambler.addPoints(removedCard.number + 10);
+					acesValues[numberOfAces - 1] = removedCard.number + 10;
+				}
+			}
+			else {
+				gambler.addPoints(removedCard.number);
+			}
+			
+			if (numberOfAces > 0 && gambler.getPoints() > 21) {
+				for (int i = 0; i < numberOfAces; i++) {
+					if (acesValues[i] == 11) {
+						int currentPoints = gambler.getPoints();
+						acesValues[i] = 1;
+						
+						gambler.setPoints(currentPoints - 10);
+					}
+				}
+			}
 			
 			view.updatePointsLabel(gambler.getPoints());
 			view.panel.drawCard(removedCard.imageString());

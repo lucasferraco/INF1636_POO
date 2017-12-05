@@ -1,0 +1,30 @@
+Table
+Points 23
+Cards 1 Hearts 6 Clubs 3 Clubs 13 Hearts
+
+Gamblers 4
+Chips 1000
+Bet 10
+Points 18
+State 1
+Cards 2 Hearts 5 Hearts 1 Diamonds
+
+Chips 1020
+Bet 10
+Points 18
+State 1
+Cards 10 Hearts 3 Hearts 5 Spades
+
+Chips 990
+Bet 10
+Points 25
+State -1
+Cards 12 Clubs 13 Spades
+
+Chips 970
+Bet 20
+Points 23
+State -1
+Cards 6 Diamonds 7 Diamonds 10 Spades
+
+End

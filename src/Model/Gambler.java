@@ -41,6 +41,10 @@ public class Gambler {
 		return points;
 	}
 	
+	public void setPoints(int points) {
+		this.points = points;
+	}
+	
 	public void addPoints(int numPoints) {
 		points += numPoints;
 		
@@ -58,11 +62,6 @@ public class Gambler {
 	}
 
 	public void addBet(int newBet) {
-		if (totalChips == 0)
-			newBet = 0;
-		else if (newBet > totalChips) 
-			newBet = newBet - totalChips;
-		
 		totalBet += newBet;
 		totalChips -= newBet;
 	}
