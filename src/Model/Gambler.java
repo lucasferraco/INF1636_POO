@@ -16,7 +16,7 @@ public class Gambler {
 	private int totalChips;
 	
 	private int defaultValue = 1000;
-	private int totalBuys = 2;
+	private int remainingBuys = 2;
 
 	public Gambler(int id) {
 		this.id = id;
@@ -79,13 +79,17 @@ public class Gambler {
 	}
 	
 	public int addBuyedChips() {
-		if (totalBuys == 0) {
+		if (remainingBuys == 0) {
 			return 0;
 		}
 		
-		totalBuys--;
+		remainingBuys--;
 		totalChips += defaultValue / 2;
-		return totalBuys;
+		return remainingBuys;
+	}
+	
+	public int getRemainingBuys() {
+		return remainingBuys;
 	}
 
 	public ArrayList<Card> reset() {

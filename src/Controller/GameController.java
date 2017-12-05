@@ -188,7 +188,7 @@ public final class GameController implements Observer {
 			distributedCards.addAll(gamblersControllers.get(i).reset());
 		
 		for(int i = 0; i < numberOfPlayers; i++) {
-			if (	gamblersControllers.get(i).getPlayerState() == PlayerState.Broke) {
+			if (	gamblersControllers.get(i).getPlayerState() == PlayerState.Broke && gamblersControllers.get(i).getPlayerRemaingingBuys() == 0) {
 				gamblersControllers.remove(i);
 				numberOfPlayers--;
 				i--;

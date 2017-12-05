@@ -7,7 +7,11 @@ import Model.Card;
 import View.GamblerScreen;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
 
 public class GamblerController {
 	private static int nextXPosition = 10;
@@ -49,7 +53,10 @@ public class GamblerController {
 			view.updateChipsLabels(gambler.getBet(), gambler.getChips());
 		}
 		else if (gambler.getChips() == 0) {
-			view.displayError("You are all in!");
+			if (gambler.getBet() != 0)
+				view.displayError("You are all in!");
+			else
+				view.displayError("Buy chips to continue playing.");
 		}
 		else {
 			view.displayError("Your bet has to be smaller then your chips.");
@@ -172,6 +179,18 @@ public class GamblerController {
 		
 		if (gambler.getChips() == 0) {
 			gambler.setState(PlayerState.Broke);
+			
+			if(gambler.getRemainingBuys() == 0) {
+				Timer t = new Timer(1 * 1000, null);
+	            t.addActionListener(new ActionListener() {
+	                @Override
+	                public void actionPerformed(ActionEvent e) {
+	                    view.dispose();
+	                }
+	            });
+	            t.setRepeats(false);
+	            t.start();
+			}
 		}
 		
 		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
@@ -182,13 +201,14 @@ public class GamblerController {
 	public ArrayList<Card> reset() {
 		ArrayList<Card> myCards = new ArrayList<Card>();
 		
-		if (gambler.getState() != PlayerState.Broke) {
+		if (!(gambler.getRemainingBuys() == 0 && gambler.getState() == PlayerState.Broke)) {
 			myCards = gambler.reset();
 			
 			view.updateChipsLabels(gambler.getBet(), gambler.getChips());
-			view.clear();		
+			view.clear();
 		}
-		else if (!gambler.cards.isEmpty()) {
+		
+		if (!gambler.cards.isEmpty()) {
 			myCards = gambler.cards;
 			gambler.cards.clear();
 		}
@@ -253,6 +273,10 @@ public class GamblerController {
 	
 	public void setPlayerCards(ArrayList<Card> cards) {
 		gambler.cards = cards;
+	}
+	
+	public int getPlayerRemaingingBuys() {
+		return gambler.getRemainingBuys();
 	}
 	
 }
