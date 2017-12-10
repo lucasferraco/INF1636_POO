@@ -19,7 +19,7 @@ public class GamblerScreen extends JFrame {
 	
 	// Info labels
 	private JLabel pointsLabel = new JLabel("Points: 0");
-	private JLabel bettingLabel = new JLabel("Bet: 0");
+	private JLabel chipsControlLabel = new JLabel("Bet: 0");
 	private JLabel totalChipsLabel = new JLabel("Chips: 0");
 	private JLabel resultLabel = new JLabel();
 	
@@ -47,10 +47,11 @@ public class GamblerScreen extends JFrame {
 		// Add info labels to panel
 		pointsLabel.setForeground(Color.white);
 		panel.add(pointsLabel);
-		panel.add(bettingLabel);
+		panel.add(chipsControlLabel);
 		panel.add(totalChipsLabel);
 		
 		disablePlayingButtons();
+		disableBuyButtons(0);
 		add(panel);
 		
 		panel.repaint();
@@ -93,7 +94,7 @@ public class GamblerScreen extends JFrame {
 		buyChipsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {		
-				controller.buyChips();
+				controller.endBuying();
 			}
 		});
 		
@@ -112,7 +113,14 @@ public class GamblerScreen extends JFrame {
 	public void updateChipsLabels(int bet, int totalChips) {
 		resultLabel.setVisible(false);
 		
-		bettingLabel.setText("Bet: " + String.valueOf(bet));
+		chipsControlLabel.setText("Bet: " + String.valueOf(bet));
+		totalChipsLabel.setText("Chips: " + String.valueOf(totalChips));
+	}
+	
+	public void updateBuyLabels(int buy, int totalChips) {
+		resultLabel.setVisible(false);
+		
+		chipsControlLabel.setText("Buying chips: " + String.valueOf(buy));
 		totalChipsLabel.setText("Chips: " + String.valueOf(totalChips));
 	}
 	
@@ -128,8 +136,20 @@ public class GamblerScreen extends JFrame {
 		betButton.setEnabled(false);
 	}
 	
-	public void enableBuyButton(boolean enable) {
-		buyChipsButton.setEnabled(enable);
+	public void enableBuyButton() {
+		buyChipsButton.setEnabled(true);
+		
+		chipsControlLabel.setText("Buying chips: 0");
+	}
+	
+	public void disableBuyButtons(int newTotalChips) {
+		chipsControlLabel.setText("Bet: 0");
+		totalChipsLabel.setText("Chips: " + String.valueOf(newTotalChips));
+		
+		buyChipsButton.setEnabled(false);
+		panel.remove(resultLabel);
+		panel.repaint();
+		
 	}
 	
 	public void enablePlayingButtons() {

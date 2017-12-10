@@ -85,14 +85,29 @@ public class GamblerController {
 		}
 	}
 	
-	public void buyChips() {
-		int remainingBuys = gambler.addBuyedChips();
-		
-		view.updateChipsLabels(gambler.getBet(), gambler.getChips());
-		
-		if (remainingBuys == 0) {
-			view.enableBuyButton(false);
+	public void buyChips(int chips) {		
+		if (gambler.addChips(chips))
+			view.updateBuyLabels(gambler.getBuy(), gambler.getChips());
+		else
+			view.displayError("Maximum buy: 500 chip.");
+	}
+	
+	public void endBuying() {
+		if (gambler.getBuy() != 0) {
+			gambler.addBuyedChips();
+			gambler.setState(PlayerState.Betting);
+			
+			view.disableBuyButtons(getPlayerChips());
+			view.enableBettingButtons();
 		}
+		else {
+			view.displayError("You have to buy at least 1 chip.");
+		}
+	}
+	
+	public void setBuyingView() {
+		view.disableBettingButtons();
+		view.enableBuyButton();
 	}
 	
 	public void play() {
@@ -167,17 +182,17 @@ public class GamblerController {
 		
 		if (result == PlayerState.Won) {
 			if (gambler.getPoints() == 21) {
-				gambler.addChips((5 * gambler.getBet()) / 2);
+				gambler.addWonChips((5 * gambler.getBet()) / 2);
 			}
 			else {
-				gambler.addChips(2 * gambler.getBet());
+				gambler.addWonChips(2 * gambler.getBet());
 			}
 		}
 		else if (result == PlayerState.Draw) {
 			gambler.addChips(gambler.getBet());
 		}
 		
-		if (gambler.getChips() == 0) {
+		if (gambler.getChips() == 0 && gambler.getState() == PlayerState.Lost) {
 			gambler.setState(PlayerState.Broke);
 			
 			if(gambler.getRemainingBuys() == 0) {
@@ -206,6 +221,11 @@ public class GamblerController {
 			
 			view.updateChipsLabels(gambler.getBet(), gambler.getChips());
 			view.clear();
+			
+			if (gambler.getState() == PlayerState.Broke) {
+				view.enableBuyButton();
+				view.disableBettingButtons();
+			}
 		}
 		
 		if (!gambler.cards.isEmpty()) {

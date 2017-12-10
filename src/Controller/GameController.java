@@ -135,6 +135,7 @@ public final class GameController implements Observer {
 	
 	public void endRound() {
 		boolean everyPlayerHasEnded = true;
+		boolean everyPlayerHasLost = true;
 		
 		for(int i = 0; i < numberOfPlayers; i++) {
 			PlayerState playerCurrentState = gamblersControllers.get(i).getPlayerState();
@@ -146,11 +147,13 @@ public final class GameController implements Observer {
 		}
 		
 		if (everyPlayerHasEnded) {
-			tableView.removeUpsideDownCard();
-			getNewCard();
-			
-			while (table.getPoints() < 17)
+			if (tableView.hasCardsImages()) {
+				tableView.removeUpsideDownCard();
 				getNewCard();
+				
+				while (table.getPoints() < 17)
+					getNewCard();
+			}
 			
 			if (table.getPoints() > 21) {
 				for(int i = 0; i < numberOfPlayers; i++)
@@ -193,6 +196,9 @@ public final class GameController implements Observer {
 				numberOfPlayers--;
 				i--;
 			}
+			
+			if (gamblersControllers.get(i).getPlayerState() == PlayerState.Broke)
+				gamblersControllers.get(i).setBuyingView();
 		}
 		
 		distributedCards.addAll(table.reset());
@@ -409,7 +415,10 @@ public final class GameController implements Observer {
 	
 	@Override
 	public void update(int value) {
-		gamblersControllers.get(currentPlayer).bet(value);
+		if (gamblersControllers.get(currentPlayer).getPlayerChips() == 0 && gamblersControllers.get(currentPlayer).getPlayerState() == PlayerState.Broke)
+			gamblersControllers.get(currentPlayer).buyChips(value);
+		else
+			gamblersControllers.get(currentPlayer).bet(value);
 	}
 	
 }

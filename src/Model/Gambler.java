@@ -13,6 +13,7 @@ public class Gambler {
 	public ArrayList<Card> cards;
 	
 	private int totalBet;
+	private int totalBuy;
 	private int totalChips;
 	
 	private int defaultValue = 1000;
@@ -26,6 +27,7 @@ public class Gambler {
 		cards = new ArrayList<Card>();
 		
 		totalBet = 0;
+		totalBuy = 0;
 		totalChips = 1000;
 	}
 	
@@ -74,32 +76,49 @@ public class Gambler {
 		totalChips = chips;
 	}
 
-	public void addChips(int newChips) {
-		totalChips += newChips;
+	public int getBuy() {
+		return totalBuy;
+	}
+	
+	public boolean addChips(int newChips) {
+		if (totalBuy + newChips > defaultValue/2)
+			return false;
+		
+		totalBuy += newChips;
+		return true;
+	}
+	
+	public void addWonChips(int prize) {
+		totalChips += prize;
+		totalBet = 0;
 	}
 	
 	public int addBuyedChips() {
-		if (remainingBuys == 0) {
+		if (remainingBuys == 0)
 			return 0;
-		}
 		
+		totalChips += totalBuy;
+		totalBuy = 0;
 		remainingBuys--;
-		totalChips += defaultValue / 2;
+		
 		return remainingBuys;
 	}
 	
 	public int getRemainingBuys() {
 		return remainingBuys;
 	}
-
+	
 	public ArrayList<Card> reset() {
 		ArrayList<Card> myCards = cards;
 		
-		state = PlayerState.Betting;
+		if (state != PlayerState.Broke)
+			state = PlayerState.Betting;			
+		
 		points = 0;
 		cards.clear();
 		
 		totalBet = 0;
+		totalBuy = 0;
 		return myCards;
 	}
 	

@@ -22,6 +22,7 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
+@SuppressWarnings("serial")
 public class TableScreen extends JFrame implements Subject, MouseListener {
 	public TableScreenPanel panel;
 	private JLabel pointsLabel = new JLabel("Points: 0");
@@ -102,6 +103,10 @@ public class TableScreen extends JFrame implements Subject, MouseListener {
 	public void removeUpsideDownCard() {
 		panel.cardsImages.remove(0);
 		panel.repaint();
+	}
+	
+	public boolean hasCardsImages() {
+		return !panel.cardsImages.isEmpty();
 	}
 	
 	public void clear() {
