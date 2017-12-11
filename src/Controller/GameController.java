@@ -75,6 +75,8 @@ public final class GameController implements Observer {
 		Collections.shuffle(deck);
 	}
 	
+	// Game Flow Methods
+	
 	public void nextPlayerToBet() {
 		currentPlayer++;
 		
@@ -181,9 +183,7 @@ public final class GameController implements Observer {
 			tableView.showResetOption();
 		}
 	}
-	
-	// Game Flow Methods
-	
+		
 	public void reset() {
 		ArrayList<Card> distributedCards = new ArrayList<Card>();
 		

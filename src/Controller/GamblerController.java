@@ -46,6 +46,11 @@ public class GamblerController {
 		view.enableBettingButtons();
 	}
 	
+	public void setBuyingView() {
+		view.disableBettingButtons();
+		view.enableBuyButton();
+	}
+	
 	public void bet(int chipValue) {
 		if (gambler.getChips() >= 0 && chipValue <= gambler.getChips()) {
 			gambler.addBet(chipValue);
@@ -104,12 +109,7 @@ public class GamblerController {
 			view.displayError("You have to buy at least 1 chip.");
 		}
 	}
-	
-	public void setBuyingView() {
-		view.disableBettingButtons();
-		view.enableBuyButton();
-	}
-	
+		
 	public void play() {
 		gambler.setState(PlayerState.Playing);
 		view.enablePlayingButtons();
